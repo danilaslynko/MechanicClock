@@ -1,5 +1,5 @@
 #pragma once
-#include "Stopwatch.h"
+#include "Man.h"
 
 namespace MechanicClock {
 
@@ -50,6 +50,7 @@ namespace MechanicClock {
 	private: System::Windows::Forms::Button^ button5;
 	private: System::Windows::Forms::Button^ button4;
 	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::PictureBox^ handPic;
 
 	private:
 		/// <summary>
@@ -78,12 +79,14 @@ namespace MechanicClock {
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->StopwatchPicture = (gcnew System::Windows::Forms::PictureBox());
+			this->handPic = (gcnew System::Windows::Forms::PictureBox());
 			this->tabControl1->SuspendLayout();
 			this->tabPage1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->trackBar1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->WatchPicture))->BeginInit();
 			this->tabPage2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->StopwatchPicture))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handPic))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// tabControl1
@@ -98,6 +101,7 @@ namespace MechanicClock {
 			// 
 			// tabPage1
 			// 
+			this->tabPage1->Controls->Add(this->handPic);
 			this->tabPage1->Controls->Add(this->button2);
 			this->tabPage1->Controls->Add(this->label1);
 			this->tabPage1->Controls->Add(this->trackBar1);
@@ -223,6 +227,15 @@ namespace MechanicClock {
 			this->StopwatchPicture->TabIndex = 1;
 			this->StopwatchPicture->TabStop = false;
 			// 
+			// handPic
+			// 
+			this->handPic->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"handPic.Image")));
+			this->handPic->Location = System::Drawing::Point(57, 8);
+			this->handPic->Name = L"handPic";
+			this->handPic->Size = System::Drawing::Size(351, 398);
+			this->handPic->TabIndex = 5;
+			this->handPic->TabStop = false;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -239,6 +252,7 @@ namespace MechanicClock {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->WatchPicture))->EndInit();
 			this->tabPage2->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->StopwatchPicture))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->handPic))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -247,6 +261,7 @@ namespace MechanicClock {
 		Watch^ watch;
 		Stopwatch^ stopwatch;
 		Image^ stopwatchImageReserve;
+		Man^ man;
 
 		void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 			watch->windSpring();
@@ -257,9 +272,14 @@ namespace MechanicClock {
 				"Pictures/Stopwatch.png"
 			);
 
+			handPic->BackColor = Color::Transparent;
+			WatchPicture->Controls->Add(handPic);
+
 			watch = gcnew Watch();
 			watch->TimeChanged += gcnew Watch::TimeChangedHandler(
 				this, &MechanicClock::MyForm::showTime);
+			watch->LowPower += gcnew Watch::WatchEventHandler(
+				this, &MechanicClock::MyForm::showHand);
 			showTime(watch, watch->Milliseconds);
 
 			stopwatch = gcnew Stopwatch();
@@ -270,10 +290,15 @@ namespace MechanicClock {
 			stopwatch->RoundMarked += gcnew Watch::TimeChangedHandler(
 				this, &MechanicClock::MyForm::onRoundMarked);
 			showStopwatchTime(stopwatch, stopwatch->Milliseconds);
+
+			man = gcnew Man(watch, stopwatch);
 		}
 
 		void showTime(Watch^ sender, long milliseconds)
 		{
+			if (handPic->Image != nullptr) {
+				handPic->Image = nullptr;
+			}
 			Pen^ hoursPen = gcnew Pen(Color::Black, 6);
 			Pen^ minutesPen = gcnew Pen(Color::Black, 4);
 			Pen^ secondsPen = gcnew Pen(Color::Black, 2);
@@ -420,6 +445,10 @@ namespace MechanicClock {
 			stopwatch->stop();
 			stopwatch->windSpring();
 			button3->Enabled = true;
+		}
+
+		void showHand(Watch^) {
+			handPic->Image = Image::FromFile("pictures/Hand.png");
 		}
 	};
 }

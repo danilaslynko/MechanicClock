@@ -115,6 +115,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Man.h" />
     <ClInclude Include="Watch.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>
@@ -142,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Pictures\Clock.png" />
+    <Image Include="Pictures\Hand.png" />
     <Image Include="Pictures\Stopwatch.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

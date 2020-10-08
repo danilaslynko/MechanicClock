@@ -27,6 +27,9 @@
     <ClInclude Include="Watch.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="Man.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MechanicClock.rc">
@@ -43,6 +46,9 @@
       <Filter>Файлы ресурсов</Filter>
     </Image>
     <Image Include="Pictures\Clock.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Pictures\Hand.png">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>

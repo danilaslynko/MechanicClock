@@ -8,10 +8,13 @@ private:
 	int interval;
 	int powerReserve;
 	long milliseconds;
+	long alarmMillis;
 	System::Windows::Forms::Timer^ timer;
 public:
+	delegate void WatchEventHandler(Watch^);
 	delegate void TimeChangedHandler(Watch^, long);
 	event TimeChangedHandler^ TimeChanged;
+	event WatchEventHandler^ LowPower;
 	// возвращает количество миллисекунд, прошедших с начала дня
 	property long Milliseconds {
 		long get() {
@@ -73,6 +76,10 @@ public:
 			Interval * (double)PowerReserve / (double)Watch::MaxPower;
 		powerReserve--;
 		TimeChanged(this, milliseconds);
+
+		if (PowerReserve < MaxPower / 5 * 4) {
+			LowPower(this);
+		}
 	}
 
 	void setTime(int hours, int minutes, int seconds) {
